@@ -1,13 +1,14 @@
-import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 function CreateAccountPage() {
   const navigate = useNavigate();
+  const { signUp, profile } = useAuth();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -47,25 +48,26 @@ function CreateAccountPage() {
       return;
     }
 
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { error: signUpError } = await signUp({
       email: formData.email,
       password: formData.password,
-      options: {
-        data: {
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-        },
-      },
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      role: "client",
     });
 
     if (signUpError) {
-      setError(signUpError.message);
-    } else {
-      navigate("/client/dashboard");
+      setError(signUpError);
     }
 
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (profile?.role === "client") {
+      navigate("/client/dashboard");
+    }
+  }, [profile, navigate]);
 
   return (
     <div className="min-h-screen bg-lolly-background font-montserrat">
@@ -74,7 +76,7 @@ function CreateAccountPage() {
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center">
           <Button
             variant="ghost"
-            onClick={() => navigate("/client")}
+            onClick={() => navigate("/client/login")}
             className="mr-4 text-lolly-contrast hover:bg-lolly-primary/10"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
