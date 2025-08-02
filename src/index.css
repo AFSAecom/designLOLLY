@@ -1,0 +1,175 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    /* Lolly Custom Colors */
+    --lolly-primary: #ce8f8a;
+    --lolly-gold: #d4c2a1;
+    --lolly-contrast: #805050;
+    --lolly-gray: #ad9c92;
+    --lolly-background: #fbf0e9;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Lolly Custom Utility Classes */
+.text-lolly-primary {
+  color: #ce8f8a;
+}
+
+.text-lolly-gold {
+  color: #d4c2a1;
+}
+
+.text-lolly-contrast {
+  color: #805050;
+}
+
+.text-lolly-gray {
+  color: #ad9c92;
+}
+
+.bg-lolly-primary {
+  background-color: #ce8f8a;
+}
+
+.bg-lolly-gold {
+  background-color: #d4c2a1;
+}
+
+.bg-lolly-contrast {
+  background-color: #805050;
+}
+
+.bg-lolly-gray {
+  background-color: #ad9c92;
+}
+
+.bg-lolly-background {
+  background-color: #fbf0e9;
+}
+
+.border-lolly-primary {
+  border-color: #ce8f8a;
+}
+
+.border-lolly-contrast {
+  border-color: #805050;
+}
+
+.border-lolly-gray {
+  border-color: #ad9c92;
+}
+
+.hover\:bg-lolly-primary\/10:hover {
+  background-color: rgba(206, 143, 138, 0.1);
+}
+
+.hover\:bg-lolly-primary\/90:hover {
+  background-color: rgba(206, 143, 138, 0.9);
+}
+
+.hover\:bg-lolly-gold\/90:hover {
+  background-color: rgba(212, 194, 161, 0.9);
+}
+
+.bg-lolly-primary\/10 {
+  background-color: rgba(206, 143, 138, 0.1);
+}
+
+.bg-lolly-primary\/20 {
+  background-color: rgba(206, 143, 138, 0.2);
+}
+
+.bg-lolly-gold\/10 {
+  background-color: rgba(212, 194, 161, 0.1);
+}
+
+.bg-lolly-gold\/20 {
+  background-color: rgba(212, 194, 161, 0.2);
+}
+
+.focus\:border-lolly-primary:focus {
+  border-color: #ce8f8a;
+}
+
+/* Fonts */
+.font-playfair {
+  font-family: "Playfair Display", serif;
+}
+
+.font-montserrat {
+  font-family: "Montserrat", sans-serif;
+}
