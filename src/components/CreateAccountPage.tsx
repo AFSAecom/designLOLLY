@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,12 +47,24 @@ function CreateAccountPage() {
       return;
     }
 
-    // Simulate account creation
-    setTimeout(() => {
-      // For now, just redirect to client dashboard
+    const { error: signUpError } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+        },
+      },
+    });
+
+    if (signUpError) {
+      setError(signUpError.message);
+    } else {
       navigate("/client/dashboard");
-      setIsLoading(false);
-    }, 1000);
+    }
+
+    setIsLoading(false);
   };
 
   return (

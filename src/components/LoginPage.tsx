@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 
+import { supabase } from "@/lib/supabase";
+
 interface LoginPageProps {
-  userType?: "conseillere" | "admin";
+  userType?: "conseillere" | "admin" | "client";
 }
 
 function LoginPage({ userType = "conseillere" }: LoginPageProps) {
@@ -26,21 +28,24 @@ function LoginPage({ userType = "conseillere" }: LoginPageProps) {
     setIsLoading(true);
     setError("");
 
-    // Simulate login process
-    setTimeout(() => {
-      // Test account for Ahmed
-      if (email === "test@lolly.tn" && password === "test1234") {
-        // Ahmed can access all spaces
-        if (currentUserType === "conseillere") {
-          navigate("/conseillere/dashboard");
-        } else if (currentUserType === "admin") {
-          navigate("/admin/dashboard");
-        }
+    const { error: loginError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (loginError) {
+      setError(loginError.message);
+    } else {
+      if (currentUserType === "conseillere") {
+        navigate("/conseillere/dashboard");
+      } else if (currentUserType === "admin") {
+        navigate("/admin/dashboard");
       } else {
-        setError("Email ou mot de passe incorrect");
+        navigate("/client/dashboard");
       }
-      setIsLoading(false);
-    }, 1000);
+    }
+
+    setIsLoading(false);
   };
 
   const getTitle = () => {
