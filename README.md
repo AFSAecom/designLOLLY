@@ -1,30 +1,79 @@
-# React + TypeScript + Vite
+# Projet Lolly – README pour TempoAI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🎯 Objectif
+Développer une application web responsive pour la marque Lolly, intégrant :
+- Vente directe et par réseau de conseillères
+- Système de parrainage multi-niveaux
+- Commissions automatisées
+- Suivi d’activité, notifications, et bonus anniversaire
+- Back-office complet pour l’administrateur
 
-Currently, two official plugins are available:
+## 🛠️ Technologies attendues
+- **Frontend** : React (mobile-first)
+- **Backend** : Supabase (PostgreSQL + Auth + Storage)
+- **Connexion externe** : Facebook, WhatsApp (V2)
+- **IA (V2)** : moteur de recommandation + scoring réseau
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📁 Fichiers fournis
+- `cahier_des_charge_Lolly_version2.docx` : Spécifications détaillées
+- `Lolly_Diagramme_Relationnel_2025-07-31_version4_complet.pdf` : Relations entre tables
+- `schema_Lolly_2025-07-31_version4.sql` : Script SQL (création de base)
+- `seed_Lolly_2025-07-31_version6.sql` : Données de test complètes
+- `README_TempoAI.md` : Ce fichier
 
-## Expanding the ESLint configuration
+## ✅ Instructions de démarrage
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 1. Créer un projet Supabase vide
+- Aller sur https://supabase.com/dashboard
+- Créer un nouveau projet `LollyApp`
+- Copier le mot de passe de la base PostgreSQL
 
-- Configure the top-level `parserOptions` property like this:
+### 2. Exécuter les scripts SQL dans l'ordre
+- Aller dans l’onglet **SQL Editor**
+- Exécuter le fichier `schema_Lolly_2025-07-31_version4.sql`
+- Puis exécuter le fichier `seed_Lolly_2025-07-31_version6.sql`
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+### 3. Vérifications à faire :
+- 6 niveaux Lolly
+- 6 utilisateurs (3 clients, 2 conseillères, 1 admin)
+- 6 parfums + variantes
+- 3 commandes + items
+- 1 promotion reliée à 1 produit
+- 3 commissions multi-niveaux
+- 1 notification de bienvenue
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### 4. Frontend
+- Construire une application React (mobile-first)
+- Respecter la charte graphique :
+  - Couleurs : #CE8F8A, #FBF0E9, #805050, #D4C2A1, #AD9C92
+  - Polices : Playfair Display (titres), Montserrat (contenu)
+
+
+## 🎨 Charte graphique Lolly
+
+- **Couleurs principales :**
+  - Couleur principale : `#CE8F8A`
+  - Fond doux / secondaire : `#FBF0E9`
+  - Couleur de contraste : `#805050`
+  - Beige doré / déco : `#D4C2A1`
+  - Gris rosé élégant : `#AD9C92`
+
+- **Polices typographiques :**
+  - Titres : Playfair Display
+  - Paragraphes : Montserrat
+
+- **Design attendu :**
+  - Mobile-first (smartphone prioritaire)
+  - Responsive desktop
+  - Cartes produits arrondies, typographie élégante
+  - Design inspiré du luxe, minimaliste
+
+
+## 🧠 IA (V2 à prévoir)
+- Suggestion de parfums
+- Prédiction de progression dans le réseau
+- Auto-rédaction de messages
+
+## 📌 Contact projet
+Ahmed Limaiem  
+Mail : (à renseigner si besoin)
