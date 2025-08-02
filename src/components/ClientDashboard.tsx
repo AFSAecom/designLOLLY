@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { supabase } from "@/lib/supabase";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -110,9 +111,23 @@ function ClientDashboard() {
   const [copiedCode, setCopiedCode] = useState(false);
   const [referralActivated, setReferralActivated] = useState(false);
   const [clientSearchTerm, setClientSearchTerm] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const { data, error } = await supabase.from('products').select('*');
+      if (!error && data) {
+        setProducts(data as Product[]);
+      } else if (error) {
+        console.error('Failed to load products', error.message);
+      }
+    };
+
+    loadProducts();
+  }, []);
 
   // Données simulées des produits
-  const products: Product[] = [
+  const sampleProducts: Product[] = [
     {
       id: "1",
       code: "P001",
@@ -236,7 +251,8 @@ function ClientDashboard() {
   ];
 
   // Filtrage des produits
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = (products.length ? products : sampleProducts).filter(
+    (product) => {
     const matchesSearch =
       searchTerm === "" ||
       product.lollyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
