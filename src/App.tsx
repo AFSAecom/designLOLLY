@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Catalogue from './pages/Catalogue';
+import Catalogue from '@/pages/Catalogue';
 import Home from '@/components/home';
 import Login from '@/pages/Login';
 import CreateAccountPage from '@/components/CreateAccountPage';
