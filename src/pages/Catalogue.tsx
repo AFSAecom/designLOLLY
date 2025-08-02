@@ -25,12 +25,7 @@ export default function Catalogue() {
   const [variantsByProductId, setVariantsByProductId] = useState<Record<string, ProductVariant[]>>({})
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-
-  const priceFormatter = new Intl.NumberFormat('fr-FR', {
-    minimumFractionDigits: 3,
-    maximumFractionDigits: 3,
-  })
-  const formatPrice = (price: number) => priceFormatter.format(price)
+ main
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,37 +82,26 @@ export default function Catalogue() {
     const query = searchQuery.toLowerCase()
     if (!query) return true
 
-    const fields = [
-      product.lolly_name,
-      product.inspired_name,
-      product.inspired_brand,
-      product.top_notes,
-      product.heart_notes,
-      product.base_notes,
-    ]
-
-    return fields.some((field) =>
-      (field || '').toLowerCase().includes(query),
+    return (
+      product.top_notes.toLowerCase().includes(query) ||
+      product.heart_notes.toLowerCase().includes(query) ||
+      product.base_notes.toLowerCase().includes(query)
+ main
     )
   })
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Catalogue Lolly</h1>
-      <div className="mb-4">
-        <label htmlFor="search" className="sr-only">
-          Rechercher un parfum
-        </label>
-        <input
-          id="search"
-          type="text"
-          placeholder="Rechercher un parfum..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full rounded-md border border-gray-300 px-3 py-2"
-          aria-label="Rechercher un parfum"
-        />
-      </div>
+
+      <input
+        type="text"
+        placeholder="Rechercher un parfum..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="mb-4 w-full rounded-md border border-gray-300 px-3 py-2"
+      />
+ main
       {loading ? (
         <p>Chargement...</p>
       ) : filteredProducts.length === 0 ? (
