@@ -1,12 +1,12 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Catalogue from '@/pages/Catalogue';
-import Home from '@/components/home';
-import Login from '@/pages/Login';
-import CreateAccountPage from '@/components/CreateAccountPage';
-import ClientDashboard from '@/components/ClientDashboard';
-import ConseillereDashboard from '@/components/ConseillereDashboard';
-import AdminDashboard from '@/components/AdminDashboard';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { Routes, Route, Navigate } from "react-router-dom";
+import Catalogue from "@/pages/Catalogue";
+import Home from "@/components/home";
+import Login from "@/pages/Login";
+import CreateAccountPage from "@/components/CreateAccountPage";
+import ClientDashboard from "@/components/ClientDashboard";
+import ConseillereDashboard from "@/components/ConseillereDashboard";
+import AdminDashboard from "@/components/AdminDashboard";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 // Application routes protected by user role
 
@@ -20,7 +20,7 @@ function App() {
       <Route
         path="/client/dashboard"
         element={
-          <ProtectedRoute roles={['client']}>
+          <ProtectedRoute roles={["client"]}>
             <ClientDashboard />
           </ProtectedRoute>
         }
@@ -28,7 +28,7 @@ function App() {
       <Route
         path="/conseillere/dashboard"
         element={
-          <ProtectedRoute roles={['advisor']}>
+          <ProtectedRoute roles={["advisor"]}>
             <ConseillereDashboard />
           </ProtectedRoute>
         }
@@ -36,7 +36,7 @@ function App() {
       <Route
         path="/admin/dashboard"
         element={
-          <ProtectedRoute roles={['admin']}>
+          <ProtectedRoute roles={["admin"]}>
             <AdminDashboard />
           </ProtectedRoute>
         }
