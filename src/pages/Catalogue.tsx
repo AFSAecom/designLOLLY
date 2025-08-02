@@ -88,23 +88,38 @@ export default function Catalogue() {
   const filteredProducts = products.filter((product) => {
     const query = searchQuery.toLowerCase()
     if (!query) return true
-    return (
-      product.top_notes.toLowerCase().includes(query) ||
-      product.heart_notes.toLowerCase().includes(query) ||
-      product.base_notes.toLowerCase().includes(query)
+
+    const fields = [
+      product.lolly_name,
+      product.inspired_name,
+      product.inspired_brand,
+      product.top_notes,
+      product.heart_notes,
+      product.base_notes,
+    ]
+
+    return fields.some((field) =>
+      (field || '').toLowerCase().includes(query),
     )
   })
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Catalogue Lolly</h1>
-      <input
-        type="text"
-        placeholder="Rechercher un parfum..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="mb-4 w-full rounded-md border border-gray-300 px-3 py-2"
-      />
+      <div className="mb-4">
+        <label htmlFor="search" className="sr-only">
+          Rechercher un parfum
+        </label>
+        <input
+          id="search"
+          type="text"
+          placeholder="Rechercher un parfum..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full rounded-md border border-gray-300 px-3 py-2"
+          aria-label="Rechercher un parfum"
+        />
+      </div>
       {loading ? (
         <p>Chargement...</p>
       ) : filteredProducts.length === 0 ? (
