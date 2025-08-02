@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 import {
   ArrowLeft,
   Package,
@@ -23,8 +24,10 @@ import {
 
 function AdminDashboard() {
   const navigate = useNavigate();
+  const { signOut } = useAuth();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOut();
     navigate("/");
   };
 
