@@ -1,16 +1,5 @@
-import { useEffect, useState } from "react";
-import { Heart } from "lucide-react";
-import {
-  Input,
-} from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { supabase } from "../lib/supabase";
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 interface Product {
   id: string;
@@ -20,12 +9,12 @@ interface Product {
   top_notes: string;
   heart_notes: string;
   base_notes: string;
-  olfactive_family: string;
   description: string;
   image_url: string;
-  product_code: string;
-  gender?: string;
-  season?: string;
+  family: string;
+  gender: string;
+  season: string;
+  code: string;
 }
 
 interface ProductVariant {
@@ -35,224 +24,141 @@ interface ProductVariant {
   price: number;
 }
 
-const priceFormatter = new Intl.NumberFormat('fr-FR', {
-  style: 'currency',
-  currency: 'TND',
-  minimumFractionDigits: 3,
-  maximumFractionDigits: 3,
-});
-
 export default function Catalogue() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [variantsByProductId, setVariantsByProductId] =
-    useState<Record<string, ProductVariant[]>>({});
-  const [nameSearch, setNameSearch] = useState("");
-  const [noteSearch, setNoteSearch] = useState("");
-  const [genderFilter, setGenderFilter] = useState("tous");
-  const [seasonFilter, setSeasonFilter] = useState("toutes");
-  const [familyFilter, setFamilyFilter] = useState("toutes");
-  const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+  const [variantsByProductId, setVariantsByProductId] = useState<Record<string, ProductVariant[]>>({});
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [ingredientQuery, setIngredientQuery] = useState('');
+  const [selectedGender, setSelectedGender] = useState('');
+  const [selectedSeason, setSelectedSeason] = useState('');
+  const [selectedFamily, setSelectedFamily] = useState('');
+
+  const priceFormatter = new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'TND',
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3
+  });
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: productsData, error: productsError } = await supabase.from('products').select('*');
-      const { data: variantsData, error: variantsError } = await supabase.from('product_variants').select('*');
+      const { data: productData, error: productError } = await supabase
+        .from('products')
+        .select('*');
 
-      if (productsError || variantsError) {
-        console.error('Erreur de chargement des données');
+      if (productError) {
+        console.error('Erreur chargement produits', productError);
         return;
       }
 
-      setProducts(productsData || []);
+      const { data: variantData, error: variantError } = await supabase
+        .from('product_variants')
+        .select('*');
+
+      if (variantError) {
+        console.error('Erreur chargement variantes', variantError);
+        return;
+      }
+
       const groupedVariants: Record<string, ProductVariant[]> = {};
-      (variantsData || []).forEach((variant) => {
+      variantData.forEach((variant) => {
         if (!groupedVariants[variant.product_id]) {
           groupedVariants[variant.product_id] = [];
         }
         groupedVariants[variant.product_id].push(variant);
       });
+
+      setProducts(productData);
       setVariantsByProductId(groupedVariants);
+      setLoading(false);
     };
 
     fetchData();
   }, []);
 
-  const uniqueFamilies = Array.from(
-    new Set(products.map((p) => p.olfactive_family).filter(Boolean)),
-  );
-
   const filteredProducts = products.filter((product) => {
-    const nameQuery = nameSearch.toLowerCase();
-    const noteQuery = noteSearch.toLowerCase();
+    const matchName =
+      product.inspired_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.inspired_brand?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesName =
-      nameQuery === "" ||
-      product.lolly_name.toLowerCase().includes(nameQuery) ||
-      product.inspired_name.toLowerCase().includes(nameQuery) ||
-      product.inspired_brand.toLowerCase().includes(nameQuery);
+    const matchIngredient =
+      product.top_notes?.toLowerCase().includes(ingredientQuery.toLowerCase()) ||
+      product.heart_notes?.toLowerCase().includes(ingredientQuery.toLowerCase()) ||
+      product.base_notes?.toLowerCase().includes(ingredientQuery.toLowerCase()) ||
+      product.family?.toLowerCase().includes(ingredientQuery.toLowerCase());
 
-    const matchesNotes =
-      noteQuery === "" ||
-      product.top_notes.toLowerCase().includes(noteQuery) ||
-      product.heart_notes.toLowerCase().includes(noteQuery) ||
-      product.base_notes.toLowerCase().includes(noteQuery) ||
-      product.olfactive_family.toLowerCase().includes(noteQuery);
+    const matchGender = selectedGender ? product.gender === selectedGender : true;
+    const matchSeason = selectedSeason ? product.season === selectedSeason : true;
+    const matchFamily = selectedFamily ? product.family === selectedFamily : true;
 
-    const matchesGender =
-      genderFilter === "tous" ||
-      product.gender?.toLowerCase() === genderFilter.toLowerCase();
-    const matchesSeason =
-      seasonFilter === "toutes" ||
-      product.season?.toLowerCase() === seasonFilter.toLowerCase();
-    const matchesFamily =
-      familyFilter === "toutes" ||
-      product.olfactive_family.toLowerCase() === familyFilter.toLowerCase();
-
-    return (
-      matchesName &&
-      matchesNotes &&
-      matchesGender &&
-      matchesSeason &&
-      matchesFamily
-    );
+    return matchName && matchIngredient && matchGender && matchSeason && matchFamily;
   });
 
-  const volumes = [15, 30, 50, 100];
-
-  const toggleFavorite = (id: string) => {
-    setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
+  if (loading) return <p>Chargement...</p>;
 
   return (
-    <div className="min-h-screen bg-lolly-background p-6 font-montserrat">
-      <h1 className="text-2xl font-playfair font-bold text-lolly-contrast mb-6">
-        Catalogue Lolly
-      </h1>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Catalogue Lolly</h1>
 
-      {/* Search fields */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <Input
-          placeholder="Rechercher par nom inspiré ou marque..."
-          value={nameSearch}
-          onChange={(e) => setNameSearch(e.target.value)}
-          className="border-2 border-lolly-contrast/30 focus:border-lolly-primary"
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <input
+          type="text"
+          placeholder="Rechercher un parfum, marque..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="p-2 border rounded"
         />
-        <Input
-          placeholder="Notes et familles olfactives..."
-          value={noteSearch}
-          onChange={(e) => setNoteSearch(e.target.value)}
-          className="border-2 border-lolly-contrast/30 focus:border-lolly-primary"
+        <input
+          type="text"
+          placeholder="Rechercher par ingrédients ou famille..."
+          value={ingredientQuery}
+          onChange={(e) => setIngredientQuery(e.target.value)}
+          className="p-2 border rounded"
         />
-      </div>
-
-      {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Select value={genderFilter} onValueChange={setGenderFilter}>
-          <SelectTrigger className="border-2 border-lolly-contrast/30">
-            <SelectValue placeholder="Genre" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="tous">Tous les genres</SelectItem>
-            <SelectItem value="femme">Femme</SelectItem>
-            <SelectItem value="homme">Homme</SelectItem>
-            <SelectItem value="mixte">Mixte</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={seasonFilter} onValueChange={setSeasonFilter}>
-          <SelectTrigger className="border-2 border-lolly-contrast/30">
-            <SelectValue placeholder="Saison" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="toutes">Toutes saisons</SelectItem>
-            <SelectItem value="été">Été</SelectItem>
-            <SelectItem value="hiver">Hiver</SelectItem>
-            <SelectItem value="printemps">Printemps</SelectItem>
-            <SelectItem value="automne">Automne</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={familyFilter} onValueChange={setFamilyFilter}>
-          <SelectTrigger className="border-2 border-lolly-contrast/30">
-            <SelectValue placeholder="Famille olfactive" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="toutes">Toutes familles</SelectItem>
-            {uniqueFamilies.map((fam) => (
-              <SelectItem key={fam} value={fam.toLowerCase()}>
-                {fam}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <select value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)} className="p-2 border rounded">
+          <option value="">Genre</option>
+          <option value="femme">Femme</option>
+          <option value="homme">Homme</option>
+          <option value="mixte">Mixte</option>
+        </select>
+        <select value={selectedSeason} onChange={(e) => setSelectedSeason(e.target.value)} className="p-2 border rounded">
+          <option value="">Saison</option>
+          <option value="ete">Été</option>
+          <option value="hiver">Hiver</option>
+          <option value="printemps">Printemps</option>
+          <option value="automne">Automne</option>
+        </select>
+        <select value={selectedFamily} onChange={(e) => setSelectedFamily(e.target.value)} className="p-2 border rounded">
+          <option value="">Famille olfactive</option>
+          <option value="floral">Floral</option>
+          <option value="boisé">Boisé</option>
+          <option value="oriental">Oriental</option>
+          <option value="frais">Frais</option>
+          <option value="gourmand">Gourmand</option>
+        </select>
       </div>
 
       {filteredProducts.length === 0 ? (
-        <p className="text-center text-lolly-contrast">
-          Aucun parfum ne correspond à votre recherche.
-        </p>
+        <p>Aucun parfum trouvé.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-2xl shadow-md p-4 flex flex-col gap-y-2"
-            >
-              <div className="relative">
-                <img
-                  src={product.image_url}
-                  alt={product.lolly_name}
-                  className="w-full h-40 object-cover rounded-2xl"
-                />
-                <button
-                  onClick={() => toggleFavorite(product.id)}
-                  className="absolute top-2 right-2"
-                >
-                  <Heart
-                    className={`w-6 h-6 ${
-                      favorites[product.id]
-                        ? "fill-lolly-primary text-lolly-primary"
-                        : "text-lolly-contrast"
-                    }`}
-                  />
-                </button>
-              </div>
-              <h2 className="text-lg font-playfair font-semibold text-lolly-contrast">
-                {product.lolly_name}
-              </h2>
-              <p className="italic text-sm text-lolly-gray">
-                {product.inspired_name} – {product.inspired_brand}
-              </p>
-              <p className="text-sm">
-                <span className="font-semibold">Notes de tête :</span> {product.top_notes}
-              </p>
-              <p className="text-sm">
-                <span className="font-semibold">Notes de cœur :</span> {product.heart_notes}
-              </p>
-              <p className="text-sm">
-                <span className="font-semibold">Notes de fond :</span> {product.base_notes}
-              </p>
-              <p className="text-sm">
-                <span className="font-semibold">Famille olfactive :</span> {product.olfactive_family}
-              </p>
-              <p className="text-sm">{product.description}</p>
-              <p className="text-xs text-lolly-gray">
-                Code produit : {product.product_code}
-              </p>
-              <div className="grid grid-cols-2 gap-2 mt-2">
-                {volumes.map((volume) => {
-                  const variant = variantsByProductId[product.id]?.find(
-                    (v) => v.volume === volume,
-                  );
-                  return variant ? (
-                    <button
-                      key={volume}
-                      className="border border-lolly-gray/30 rounded-full px-2 py-1 text-xs text-lolly-contrast"
-                    >
-                      {volume} ml – {priceFormatter.format(variant.price)}
-                    </button>
-                  ) : null;
-                })}
+            <div key={product.id} className="bg-white rounded-xl shadow p-4">
+              <img src={product.image_url} alt={product.lolly_name} className="w-full h-40 object-cover rounded" />
+              <h2 className="text-lg font-semibold mt-2">{product.lolly_name}</h2>
+              <p className="italic text-sm">Inspiré de {product.inspired_name} – {product.inspired_brand}</p>
+              <p className="mt-1 text-sm"><strong>Notes de tête :</strong> {product.top_notes}</p>
+              <p className="text-sm"><strong>Notes de coeur :</strong> {product.heart_notes}</p>
+              <p className="text-sm"><strong>Notes de fond :</strong> {product.base_notes}</p>
+              <p className="text-sm mt-2">{product.description}</p>
+              <p className="text-xs mt-1 text-gray-500">Code produit : {product.code}</p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {(variantsByProductId[product.id] || []).map((variant) => (
+                  <button key={variant.id} className="border px-3 py-1 rounded-full text-sm">
+                    {variant.volume} ml – {priceFormatter.format(variant.price)}
+                  </button>
+                ))}
               </div>
             </div>
           ))}
