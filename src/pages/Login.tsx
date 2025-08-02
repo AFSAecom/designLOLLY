@@ -32,13 +32,13 @@ const Login = () => {
     }
     switch (profile.role) {
       case 'client':
-        navigate('/client');
+        navigate('/client/dashboard');
         break;
       case 'advisor':
-        navigate('/advisor');
+        navigate('/conseillere/dashboard');
         break;
       case 'admin':
-        navigate('/admin');
+        navigate('/admin/dashboard');
         break;
       default:
         setError('Rôle inconnu');
