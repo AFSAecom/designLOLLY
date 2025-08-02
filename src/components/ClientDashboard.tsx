@@ -53,6 +53,7 @@ import {
   Copy,
   Check,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 // Types pour la simulation
 type ViewType =
@@ -96,6 +97,7 @@ interface CartItem {
 
 function ClientDashboard() {
   const navigate = useNavigate();
+  const { signOut } = useAuth();
   const [currentView, setCurrentView] = useState<ViewType>("catalog");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>("30ml");
@@ -335,6 +337,11 @@ function ClientDashboard() {
     return { subtotal, tax, total: subtotal + tax };
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   const renderCatalog = () => (
     <div className="min-h-screen bg-lolly-background font-montserrat">
       {/* Header */}
@@ -529,19 +536,28 @@ function ClientDashboard() {
           <h1 className="text-xl font-playfair font-bold text-lolly-contrast">
             Mon Espace Client
           </h1>
-          <Button
-            variant="ghost"
-            className="text-lolly-contrast hover:bg-lolly-primary/10 relative text-sm px-2"
-            onClick={() => setCurrentView("cart")}
-          >
-            <ShoppingCart className="w-4 h-4 mr-1" />
-            <span className="hidden sm:inline">Panier</span>
-            {cartItems.length > 0 && (
-              <Badge className="absolute -top-2 -right-2 bg-lolly-primary text-white text-xs">
-                {cartItems.length}
-              </Badge>
-            )}
-          </Button>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              className="text-lolly-contrast hover:bg-lolly-primary/10 relative text-sm px-2"
+              onClick={() => setCurrentView("cart")}
+            >
+              <ShoppingCart className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Panier</span>
+              {cartItems.length > 0 && (
+                <Badge className="absolute -top-2 -right-2 bg-lolly-primary text-white text-xs">
+                  {cartItems.length}
+                </Badge>
+              )}
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={handleLogout}
+              className="text-lolly-contrast hover:bg-red-50 hover:text-red-600 text-sm px-2"
+            >
+              Déconnexion
+            </Button>
+          </div>
         </div>
       </header>
 

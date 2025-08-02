@@ -44,9 +44,11 @@ import {
   Trash2,
   RotateCcw,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 function ConseillereDashboard() {
   const navigate = useNavigate();
+  const { signOut } = useAuth();
   const [currentView, setCurrentView] = useState<
     "dashboard" | "catalog" | "favorites"
   >("dashboard");
@@ -58,6 +60,11 @@ function ConseillereDashboard() {
   const [clientSearchTerm, setClientSearchTerm] = useState("");
   const [selectedDateRange, setSelectedDateRange] = useState("today");
 
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   // Force component to render with explicit styles
   console.log("ConseillereDashboard LOADED - currentView:", currentView);
 
@@ -65,10 +72,6 @@ function ConseillereDashboard() {
   React.useEffect(() => {
     console.log("ConseillereDashboard mounted successfully");
   }, []);
-
-  const handleLogout = () => {
-    navigate("/");
-  };
 
   const toggleFavorite = (productId: string) => {
     setFavorites((prev) =>
@@ -93,40 +96,7 @@ function ConseillereDashboard() {
     clearFavorites(); // Clear favorites after sale
   };
 
-  const filteredProducts = perfumes.filter((product) => {
-    const matchesSearch =
-      searchTerm === "" ||
-      product.lollyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.inspiredPerfume
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      product.brand.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesIngredient =
-      ingredientSearch === "" ||
-      product.notes.top
-        .toLowerCase()
-        .includes(ingredientSearch.toLowerCase()) ||
-      product.notes.heart
-        .toLowerCase()
-        .includes(ingredientSearch.toLowerCase()) ||
-      product.notes.base
-        .toLowerCase()
-        .includes(ingredientSearch.toLowerCase()) ||
-      product.family.toLowerCase().includes(ingredientSearch.toLowerCase());
-
-    return matchesSearch && matchesIngredient;
-  });
-
-  const filteredClients = clients.filter((client) => {
-    if (clientSearchTerm === "") return true;
-    const searchLower = clientSearchTerm.toLowerCase();
-    return (
-      client.name.toLowerCase().includes(searchLower) ||
-      client.phone.includes(clientSearchTerm) ||
-      client.email.toLowerCase().includes(searchLower)
-    );
-  });
+  // filteredProducts & filteredClients defined after data arrays
 
   const getSalesHistory = () => {
     // Sample sales history based on selected date range
@@ -352,6 +322,41 @@ function ConseillereDashboard() {
       ],
     },
   ];
+
+  const filteredProducts = perfumes.filter((product) => {
+    const matchesSearch =
+      searchTerm === "" ||
+      product.lollyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.inspiredPerfume
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      product.brand.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesIngredient =
+      ingredientSearch === "" ||
+      product.notes.top
+        .toLowerCase()
+        .includes(ingredientSearch.toLowerCase()) ||
+      product.notes.heart
+        .toLowerCase()
+        .includes(ingredientSearch.toLowerCase()) ||
+      product.notes.base
+        .toLowerCase()
+        .includes(ingredientSearch.toLowerCase()) ||
+      product.family.toLowerCase().includes(ingredientSearch.toLowerCase());
+
+    return matchesSearch && matchesIngredient;
+  });
+
+  const filteredClients = clients.filter((client) => {
+    if (clientSearchTerm === "") return true;
+    const searchLower = clientSearchTerm.toLowerCase();
+    return (
+      client.name.toLowerCase().includes(searchLower) ||
+      client.phone.includes(clientSearchTerm) ||
+      client.email.toLowerCase().includes(searchLower)
+    );
+  });
 
   // Promotions actives
   const promotions = [

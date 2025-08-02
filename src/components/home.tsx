@@ -1,9 +1,26 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { User, Flower, Settings } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 function Home() {
   const navigate = useNavigate();
+  const { profile } = useAuth();
+
+  const goClient = () => {
+    if (profile?.role === "client") navigate("/client/dashboard");
+    else navigate("/client/login");
+  };
+
+  const goAdvisor = () => {
+    if (profile?.role === "advisor") navigate("/conseillere/dashboard");
+    else navigate("/conseillere/login");
+  };
+
+  const goAdmin = () => {
+    if (profile?.role === "admin") navigate("/admin/dashboard");
+    else navigate("/admin/login");
+  };
 
   return (
     <div className="min-h-screen bg-lolly-background font-montserrat">
@@ -47,7 +64,7 @@ function Home() {
             </h3>
 
             <Button
-              onClick={() => navigate("/client")}
+              onClick={goClient}
               className="w-full bg-lolly-primary hover:bg-lolly-primary/90 text-white font-medium py-3"
             >
               Accéder
@@ -64,7 +81,7 @@ function Home() {
             </h3>
 
             <Button
-              onClick={() => navigate("/conseillere/login")}
+              onClick={goAdvisor}
               className="w-full bg-lolly-gold hover:bg-lolly-gold/90 text-lolly-contrast font-medium py-3"
             >
               Se connecter
@@ -81,7 +98,7 @@ function Home() {
             </h3>
 
             <Button
-              onClick={() => navigate("/admin/login")}
+              onClick={goAdmin}
               className="w-full bg-lolly-contrast hover:bg-lolly-contrast/90 text-white font-medium py-3"
             >
               Se connecter

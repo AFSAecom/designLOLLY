@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
-
-import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/hooks/useAuth";
 
 interface LoginPageProps {
   userType?: "conseillere" | "admin" | "client";
@@ -15,7 +14,9 @@ function LoginPage({ userType = "conseillere" }: LoginPageProps) {
   const navigate = useNavigate();
   const params = useParams();
   const currentUserType =
-    userType || (params.userType as "conseillere" | "admin");
+    userType || (params.userType as "conseillere" | "admin" | "client");
+
+  const { signIn, signInWithFacebook, profile } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,28 +24,23 @@ function LoginPage({ userType = "conseillere" }: LoginPageProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    const rolePaths: Record<string, string> = {
+      client: "/client/dashboard",
+      advisor: "/conseillere/dashboard",
+      admin: "/admin/dashboard",
+    };
+    if (profile?.role) {
+      navigate(rolePaths[profile.role]);
+    }
+  }, [profile, navigate]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-
-    const { error: loginError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (loginError) {
-      setError(loginError.message);
-    } else {
-      if (currentUserType === "conseillere") {
-        navigate("/conseillere/dashboard");
-      } else if (currentUserType === "admin") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/client/dashboard");
-      }
-    }
-
+    const { error } = await signIn(email, password);
+    if (error) setError(error);
     setIsLoading(false);
   };
 
@@ -163,6 +159,14 @@ function LoginPage({ userType = "conseillere" }: LoginPageProps) {
               className="w-full bg-lolly-primary hover:bg-lolly-primary/90 text-white font-medium py-3"
             >
               {isLoading ? "Connexion..." : "Se connecter"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={signInWithFacebook}
+              className="w-full mt-2"
+            >
+              Continuer avec Facebook
             </Button>
           </form>
 
