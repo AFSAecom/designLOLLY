@@ -1,5 +1,3 @@
-// src/pages/Catalogue.tsx
-
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
@@ -28,11 +26,11 @@ export default function Catalogue() {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
-  const formatPrice = (price: number) =>
-    price.toLocaleString('fr-FR', {
-      minimumFractionDigits: 3,
-      maximumFractionDigits: 3,
-    })
+  const priceFormatter = new Intl.NumberFormat('fr-FR', {
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3,
+  })
+  const formatPrice = (price: number) => priceFormatter.format(price)
 
   useEffect(() => {
     const fetchData = async () => {
