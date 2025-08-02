@@ -66,39 +66,72 @@ export default function Catalogue() {
   );
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Catalogue Lolly</h1>
-      <input
-        type="text"
-        placeholder="Rechercher un parfum..."
-        className="border p-2 mb-4 w-full rounded"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      {loading ? (
-        <p>Chargement...</p>
-      ) : filteredProducts.length === 0 ? (
-        <p>Aucun parfum trouvé</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredProducts.map((product) => (
-            <div key={product.id} className="border p-4 rounded shadow">
-              <img src={product.image_url} alt={product.lolly_name} className="mb-2 rounded" />
-              <h2 className="text-xl font-semibold">{product.lolly_name}</h2>
-              <p className="italic text-sm text-gray-600">Inspiré de {product.inspired_name} – {product.inspired_brand}</p>
-              <p><strong>Notes de tête :</strong> {product.top_notes}</p>
-              <p><strong>Notes de cœur :</strong> {product.heart_notes}</p>
-              <p><strong>Notes de fond :</strong> {product.base_notes}</p>
-              <p className="text-sm text-gray-600">{product.description}</p>
-              {variantsByProductId[product.id]?.map((variant) => (
-                <p key={variant.id} className="text-sm mt-1">
-                  {variant.volume} ml – {priceFormatter.format(variant.price)} TND
-                </p>
-              ))}
-            </div>
-          ))}
+    <div className="min-h-screen bg-lolly-background">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <h1 className="text-3xl font-playfair font-semibold text-lolly-contrast mb-8 text-center">
+          Catalogue Lolly
+        </h1>
+
+        <div className="flex justify-center mb-8">
+          <input
+            type="text"
+            placeholder="Rechercher un parfum..."
+            className="w-full max-w-md p-3 border border-lolly-gray/30 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-lolly-primary bg-white"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
-      )}
+
+        {loading ? (
+          <p className="text-center text-lolly-gray">Chargement...</p>
+        ) : filteredProducts.length === 0 ? (
+          <p className="text-center text-lolly-gray">Aucun parfum trouvé</p>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredProducts.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-6 flex flex-col"
+              >
+                <img
+                  src={product.image_url}
+                  alt={product.lolly_name}
+                  className="w-full h-40 object-cover mb-4 rounded-md"
+                />
+                <h2 className="text-xl font-playfair font-semibold text-lolly-contrast">
+                  {product.lolly_name}
+                </h2>
+                <p className="italic text-sm text-lolly-gray mb-2">
+                  Inspiré de {product.inspired_name} – {product.inspired_brand}
+                </p>
+                <div className="space-y-1 text-sm">
+                  <p>
+                    <strong>Notes de tête :</strong> {product.top_notes}
+                  </p>
+                  <p>
+                    <strong>Notes de cœur :</strong> {product.heart_notes}
+                  </p>
+                  <p>
+                    <strong>Notes de fond :</strong> {product.base_notes}
+                  </p>
+                </div>
+                {product.description && (
+                  <p className="text-sm text-gray-600 mt-2 flex-1">
+                    {product.description}
+                  </p>
+                )}
+                <div className="mt-4 space-y-1 text-sm font-medium">
+                  {variantsByProductId[product.id]?.map((variant) => (
+                    <p key={variant.id}>
+                      {variant.volume} ml – {priceFormatter.format(variant.price)} TND
+                    </p>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
