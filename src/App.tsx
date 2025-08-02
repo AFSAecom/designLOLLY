@@ -8,6 +8,8 @@ import ConseillereDashboard from '@/components/ConseillereDashboard';
 import AdminDashboard from '@/components/AdminDashboard';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
+// Application routes protected by user role
+
 function App() {
   return (
     <Routes>
