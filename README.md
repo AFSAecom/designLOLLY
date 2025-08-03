@@ -38,6 +38,14 @@ Développer une application web responsive pour la marque Lolly, intégrant :
   (nécessite la variable d'environnement `SUPABASE_SERVICE_ROLE_KEY`).
 - L'utilisateur `client@lolly.tn` sera créé dans `auth.users` et répliqué dans la table `users`.
 
+### Variables d'environnement requises
+Dans votre fichier `.env`, définissez :
+
+```
+VITE_SUPABASE_URL=<URL de votre projet Supabase>
+VITE_SUPABASE_ANON_KEY=<clé publique Supabase>
+```
+
 ### Identifiants de démonstration (optionnel)
 Vous pouvez pré-remplir le formulaire de connexion avec un compte de test en définissant dans votre fichier `.env` :
 
