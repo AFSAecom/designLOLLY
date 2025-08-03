@@ -39,13 +39,17 @@ export default function ClientLogin() {
         type="email"
         placeholder="Email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setEmail(e.target.value)
+        }
       />
       <input
         type="password"
         placeholder="Mot de passe"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setPassword(e.target.value)
+        }
       />
       <button onClick={handleLogin} disabled={loading}>
         {loading ? "Connexion..." : "Se connecter"}
