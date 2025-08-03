@@ -54,6 +54,15 @@ VITE_DEMO_EMAIL=client@lolly.tn
 VITE_DEMO_PASSWORD=taftoufa
 ```
 
+### Données factices en développement
+Pour charger un jeu de produits de démonstration sans dépendre de Supabase, vous pouvez définir la variable suivante dans votre fichier `.env` :
+
+```
+VITE_USE_MOCK_PRODUCTS=true
+```
+
+Lorsque cette variable vaut `true`, le `ClientDashboard` utilise les produits définis dans `src/data/sampleProducts.ts`.
+
 ### 4. Vérifications à faire :
 - 6 niveaux Lolly
 - 6 utilisateurs (3 clients, 2 conseillères, 1 admin)
