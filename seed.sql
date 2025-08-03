@@ -195,7 +195,6 @@ INSERT INTO products (
     );
 
 
--- Ajout des trois utilisateurs : admin, conseillère et client
 INSERT INTO users (
     id, first_name, last_name, email, phone_number, birth_date, password,
     role, facebook_id, messenger_id, referrer_id, level_id
