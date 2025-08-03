@@ -38,6 +38,13 @@ Développer une application web responsive pour la marque Lolly, intégrant :
   (nécessite la variable d'environnement `SUPABASE_SERVICE_ROLE_KEY`).
 - L'utilisateur `client@lolly.tn` sera créé dans `auth.users` et répliqué dans la table `users`.
 
+### Générer les types Supabase
+Synchronisez les types TypeScript avec la base distante en exécutant :
+
+```bash
+SUPABASE_PROJECT_ID=<votre-id-de-projet> npm run types:supabase
+```
+
 ### Variables d'environnement requises
 Dans votre fichier `.env`, définissez :
 
