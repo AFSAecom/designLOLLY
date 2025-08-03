@@ -38,6 +38,14 @@ Développer une application web responsive pour la marque Lolly, intégrant :
   (nécessite la variable d'environnement `SUPABASE_SERVICE_ROLE_KEY`).
 - L'utilisateur `client@lolly.tn` sera créé dans `auth.users` et répliqué dans la table `users`.
 
+### Identifiants de démonstration (optionnel)
+Vous pouvez pré-remplir le formulaire de connexion avec un compte de test en définissant dans votre fichier `.env` :
+
+```
+VITE_DEMO_EMAIL=client@lolly.tn
+VITE_DEMO_PASSWORD=taftoufa
+```
+
 ### 4. Vérifications à faire :
 - 6 niveaux Lolly
 - 6 utilisateurs (3 clients, 2 conseillères, 1 admin)
