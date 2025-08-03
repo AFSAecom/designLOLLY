@@ -14,17 +14,21 @@ export default function ClientLogin() {
   const handleLogin = async () => {
     setLoading(true);
     setErrorMsg("");
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setErrorMsg("Email ou mot de passe incorrect");
+      if (error) {
+        setErrorMsg("Email ou mot de passe incorrect");
+      } else {
+        navigate("/client/catalogue");
+      }
+    } catch (error) {
+      setErrorMsg("Erreur lors de la connexion");
+    } finally {
       setLoading(false);
-    } else {
-      navigate("/client/catalogue");
     }
   };
 
