@@ -33,7 +33,12 @@ Développer une application web responsive pour la marque Lolly, intégrant :
 - Exécuter le fichier `schema_Lolly_2025-07-31_version4.sql`
 - Puis exécuter le fichier `seed_Lolly_2025-07-31_version6.sql`
 
-### 3. Vérifications à faire :
+### 3. Ajouter l'utilisateur d'authentification
+- Après l'import du fichier `seed.sql`, exécuter `npx ts-node scripts/seedAuthUsers.ts`
+  (nécessite la variable d'environnement `SUPABASE_SERVICE_ROLE_KEY`).
+- L'utilisateur `client@lolly.tn` sera créé dans `auth.users` et répliqué dans la table `users`.
+
+### 4. Vérifications à faire :
 - 6 niveaux Lolly
 - 6 utilisateurs (3 clients, 2 conseillères, 1 admin)
 - 6 parfums + variantes
@@ -42,7 +47,7 @@ Développer une application web responsive pour la marque Lolly, intégrant :
 - 3 commissions multi-niveaux
 - 1 notification de bienvenue
 
-### 4. Frontend
+### 5. Frontend
 - Construire une application React (mobile-first)
 - Respecter la charte graphique :
   - Couleurs : #CE8F8A, #FBF0E9, #805050, #D4C2A1, #AD9C92
