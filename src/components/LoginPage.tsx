@@ -170,17 +170,6 @@ function LoginPage({ userType = "conseillere" }: LoginPageProps) {
             </Button>
           </form>
 
-          {/* Test Account Info */}
-          <div className="mt-8 p-4 bg-lolly-background rounded-lg">
-            <p className="text-sm text-lolly-gray text-center mb-2">
-              <strong>Compte de test :</strong>
-            </p>
-            <p className="text-xs text-lolly-gray text-center">
-              Email: test@lolly.tn
-              <br />
-              Mot de passe: test1234
-            </p>
-          </div>
         </div>
       </main>
     </div>
